@@ -1,0 +1,6 @@
+[project]
+name=effi-pm
+
+[dev]
+run=go run .
+build=go build -o build/effi .
