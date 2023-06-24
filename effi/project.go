@@ -1,20 +1,21 @@
 package effi
 
 import (
-	"effi-pm/parser"
 	"os"
+  "os/exec"
 	"path/filepath"
+	"effi-pm/parser"
 )
 
 type Project struct {
-  Name string;
-  Profiles map[string]Profile;
-  Path string;
+  Name string
+  Profiles map[string]Profile
+  Path string
 }
 
 type Profile struct {
-  RunCommand string;
-  BuildCommand string;
+  RunCommand string
+  BuildCommand string
 }
 
 func ParseProject(data string) Project {
@@ -51,5 +52,23 @@ func ParseProjectFile(path string) (Project, error) {
   project.Path = filepath.Dir(path)
 
   return project, nil
+}
+
+func (project Project) Run(profile string) error {
+  command := exec.Command("sh", "-c", project.Profiles[profile].RunCommand)
+  command.Dir = project.Path
+  command.Stdin = os.Stdin
+  command.Stdout = os.Stdout
+  command.Stderr = os.Stderr
+  return command.Run()
+}
+
+func (project Project) Build(profile string) error {
+  command := exec.Command("sh", "-c", project.Profiles[profile].BuildCommand)
+  command.Dir = project.Path
+  command.Stdin = os.Stdin
+  command.Stdout = os.Stdout
+  command.Stderr = os.Stderr
+  return command.Run()
 }
 
