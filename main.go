@@ -114,7 +114,8 @@ func main() {
   printSuccess(fmt.Sprintf("found project %v at %v", project.Name, project.Path))
 
   if !run && !build {
-    command := exec.Command(env_config.Editor, project.Path)
+    command := exec.Command(env_config.Editor, ".")
+    command.Dir = project.Path
     command.Stdin = os.Stdin
     command.Stdout = os.Stdout
     command.Stderr = os.Stderr
